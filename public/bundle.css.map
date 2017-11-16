@@ -5,8 +5,8 @@
     "..\\src\\App.html"
   ],
   "sourcesContent": [
-    "<h1>Hello {{name}}!</h1>\n\n<style>\n\th1 {\n\t\tcolor: purple;\n\t}\n</style>"
+    "<h1>Hello {{name}}!</h1>\r\n\r\n<style>\r\n\th1 {\r\n\t\tcolor: purple;\r\n\t}\r\n</style>"
   ],
   "names": [],
-  "mappings": "AAGC,EAAE,kBAAC,CAAC,AACH,KAAK,CAAE,MAAM,AACd,CAAC"
+  "mappings": "AAGC,EAAE,mBAAC,CAAC,AACH,KAAK,CAAE,MAAM,AACd,CAAC"
 }
