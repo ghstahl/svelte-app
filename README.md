@@ -12,7 +12,11 @@ app should be running at
 ## Serving over HTTPS:
 
 I use the following for simple static files;  
-[serve-https](https://www.npmjs.com/package/serve-https)
+[serve-https](https://www.npmjs.com/package/serve-https)  
+```
+# v2.x
+npm install --global serve-https@2.x
+```
 
 If building on windows, I download OpenSSL link libs from here.  
 [LinkLibs](https://indy.fulgan.com/SSL/LinkLibs/)
