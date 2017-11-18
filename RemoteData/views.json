@@ -1,0 +1,8 @@
+{
+  "views": [
+    {
+      "location": "/Areas/ExtSPA/Views/Home/Svelte.cshtml",
+      "content": "@section head{\r\n <link rel=\"stylesheet\" href=\"http://localhost:5000/global.css\" />\r\n <link rel=\"stylesheet\" href=\"http://localhost:5000/bundle.css\" />\r\n  }\r\n <script src='http://localhost:5000/bundle.js'></script>"
+    }
+  ]
+}
