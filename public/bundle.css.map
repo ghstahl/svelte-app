@@ -5,8 +5,8 @@
     "..\\src\\App.html"
   ],
   "sourcesContent": [
-    "<h1>Hello {{name}}!</h1>\n\n<style>\n\th1 {\n\t\tcolor: purple;\n\t}\n</style>"
+    "<h1>Hello {{name}}!</h1>\r\n\r\n<style>\r\n\th1 {\r\n\t\tcolor: purple;\r\n\t}\r\n</style>\r\n\r\n<div id=\"disqus_thread\"></div>\r\n<script>\r\n\r\n/**\r\n*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.\r\n*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/\r\n/*\r\nvar disqus_config = function () {\r\nthis.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable\r\nthis.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable\r\n};\r\n*/\r\n(function() { // DON'T EDIT BELOW THIS LINE\r\nvar d = document, s = d.createElement('script');\r\ns.src = 'https://myscotch.disqus.com/embed.js';\r\ns.setAttribute('data-timestamp', +new Date());\r\n(d.head || d.body).appendChild(s);\r\n})();\r\n</script>\r\n<noscript>Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\">comments powered by Disqus.</a></noscript>"
   ],
   "names": [],
-  "mappings": "AAGC,EAAE,kBAAC,CAAC,AACH,KAAK,CAAE,MAAM,AACd,CAAC"
+  "mappings": "AAGC,EAAE,mBAAC,CAAC,AACH,KAAK,CAAE,MAAM,AACd,CAAC"
 }
