@@ -1,4 +1,19 @@
 <h1>Hello {{name}}!</h1>
+<p>Count: {{count}}</p>
+<button on:click='incrementCount()'>+1</button>
+<button on:click='corsTest()'>corsTest</button>
+<p>pet: {{pet}}</p>
+<button on:click='corsTest2()'>corsTest2</button>
+<p>corsTest2: {{corsTest2}}</p>
+<button on:click='fetchIdentity()'>fetchIdentity</button>
+<p>identity.oidc.access_token: {{identity.oidc.access_token}}</p>
+<p>identity.access_code: {{identity.access_code}}</p>
+
+{{#if identity.oidc.access_token}}
+<button on:click='establishAuthenticatedSession()'>establishAuthenticatedSession</button>
+<button on:click='checkAuthenticatedSession()'>checkAuthenticatedSession</button>
+{{/if}}
+ 
 
 <style>
 	h1 {
@@ -6,23 +21,147 @@
 	}
 </style>
 
-<div id="disqus_thread"></div>
-<script>
+ 
 
-/**
-*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-/*
-var disqus_config = function () {
-this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-*/
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-s.src = 'https://myscotch.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
+<script>
+ 
+  
+	export default {
+	  data () {
+		return {
+		  user: {loggedIn: false},
+		  pet:"",
+		  identity:{oidc:{
+			access_token:null
+		  }},
+		  count:0,
+		  corsTest2:""
+		}
+	  },
+	  oncreate() {
+		//read user object from localStorage
+		const user = localStorage.getItem('user');
+		if(user) {
+		  this.set({ user: {loggedIn: true} });
+		  return;
+		}
+	  },
+  
+	  ondestroy() {
+	  },
+  
+	  components: {
+ 
+	  },
+  
+	  methods: {
+		incrementCount(){
+			let model = this.get();
+			this.set({ count: model.count + 1 });
+		},
+		fetchIdentity(){
+			let self = this;
+			var model = this.get();
+			var body = JSON.stringify(
+            {
+                query: 'query q($id: String!){identity(input: { id: $id }) {access_code oidc}}',
+                variables: '{"id": "NOF"}',
+                operationName: 'q'
+            });
+        	fetch('/api/graphql',
+            {
+                credentials: 'include',
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res.data);
+				self.set({ identity: res.data.identity });
+				console.log(model);
+            });
+		},
+		establishAuthenticatedSession(){
+			
+			let self = this;
+			var model = this.get();
+			console.log(model);
+
+			var url = "https://pingo7identityserver4.azurewebsites.net/Account/EstablishAuthenticatedSession?accessToken="+model.identity.oidc.access_token;
+			fetch(url,
+            {
+				credentials: 'include',
+				headers: { 'Content-Type': 'text/plain' },
+				method: 'GET'
+            })
+            .then(function (res) {
+				console.log(res);
+            });
+
+		},
+		checkAuthenticatedSession(){
+			let self = this;
+			var model = this.get();
+			console.log(model);
+
+			var url = "https://pingo7identityserver4.azurewebsites.net/Account/CheckAuthenticatedSession";
+			fetch(url,
+            {
+				credentials: 'include',
+				method: 'GET',
+				headers: { 'Content-Type': 'text/plain' }
+            })
+            .then(res => res.text())
+            .then(function (res) {
+				console.log(res);
+            });
+
+		},
+		corsTest(){
+			let self = this;
+			let model = this.get();
+			// do some CORS
+			var body2 = JSON.stringify(
+            {
+                name: 'dog',
+                description: 'I am dog'
+            });
+        	fetch('https://pingo7api.azurewebsites.net/api2/OpenApi/Create',
+            {
+
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body2
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res);
+				self.set({ pet: JSON.stringify(res) });
+			
+            });
+		},
+		corsTest2() {
+			let self = this;
+			let model = this.get();
+			fetch('https://pingo7api.azurewebsites.net/api2/OpenApi/testing2',
+            {
+
+                method: 'GET',
+                headers: { 'Content-Type': 'text/plain' },
+
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res);
+				self.set({ corsTest2: "api3:" + JSON.stringify(res) });
+            });
+		} 
+	  },
+	  helpers: {
+		 
+	  }
+	}
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+ 
