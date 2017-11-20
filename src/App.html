@@ -10,8 +10,12 @@
 <p>identity.access_code: {{identity.access_code}}</p>
 
 {{#if identity.oidc.access_token}}
-<button on:click='establishAuthenticatedSession()'>establishAuthenticatedSession</button>
-<button on:click='checkAuthenticatedSession()'>checkAuthenticatedSession</button>
+
+	<button on:click='establishAuthenticatedSession()'>establishAuthenticatedSession</button>
+	<p>establishSession.message: {{establishSession.message}}</p>
+	<button on:click='checkAuthenticatedSession()'>checkAuthenticatedSession</button>
+	<p>checkAuthenticatedSession.message: {{checkAuthenticatedSession.message}}</p>
+
 {{/if}}
  
 
@@ -29,6 +33,8 @@
 	export default {
 	  data () {
 		return {
+		  establishSession:{},
+		  checkAuthenticatedSession:{},
 		  user: {loggedIn: false},
 		  pet:"",
 		  identity:{oidc:{
@@ -97,8 +103,12 @@
             })
             .then(function (res) {
 				console.log(res);
-            });
-
+				self.set({ establishSession:{ message:"Success" }});
+            }).catch(function(error) {
+				self.set({ establishSession:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
+			
 		},
 		checkAuthenticatedSession(){
 			let self = this;
@@ -115,7 +125,12 @@
             .then(res => res.text())
             .then(function (res) {
 				console.log(res);
-            });
+				self.set({ checkAuthenticatedSession:{ message:res }});
+            })
+			.catch(function(error) {
+				self.set({ checkAuthenticatedSession:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
 
 		},
 		corsTest(){
