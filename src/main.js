@@ -1,10 +1,8 @@
-import App from './App.html';
+import App from './app.html'
 
-const app = new App({
+new App({
 	target: document.body,
 	data: {
 		name: 'world'
 	}
-});
-
-export default app;
+})
