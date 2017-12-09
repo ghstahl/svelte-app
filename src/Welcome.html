@@ -11,10 +11,23 @@
 <p>identity.oidc.access_token: {{identity.oidc.access_token}}</p>
 <p>identity.access_code: {{identity.access_code}}</p>
 
-{{#if identity.oidc.access_token}}
 
+{{#if identity.oidc.access_token}}
+	<button on:click='requestToken()'>requestToken</button>
+	<p>token: {{token}}</p>
+	{{#if token}}
+		<button on:click='checkAuthenticatedToken()'>checkAuthenticatedToken</button>
+		<p>checkAuthenticatedToken.message: {{checkAuthenticatedToken.message}}</p>
+	{{/if}}
+{{/if}}
+
+<br/>
+{{#if identity.oidc.access_token}}
+ 
 	<button on:click='establishAuthenticatedSession()'>establishAuthenticatedSession</button>
-	<p>establishSession.message: {{establishSession.message}}</p>
+    <p>establishSession.message: {{establishSession.message}}</p>
+    <button on:click='signOut()'>signOut</button>
+	<p>signout.message: {{signoutResult.message}}</p>
 	<button on:click='checkAuthenticatedSession()'>checkAuthenticatedSession</button>
 	<p>checkAuthenticatedSession.message: {{checkAuthenticatedSession.message}}</p>
 
@@ -31,10 +44,14 @@
   export default {
     data () {
 		return {
-		  establishSession:{},
+		  requestToken:{},
+          establishSession:{},
+          signoutResult:{},
 		  checkAuthenticatedSession:{},
+		  checkAuthenticatedToken:{},
 		  user: {loggedIn: false},
 		  pet:"",
+		  token:null,
 		  identity:{oidc:{
 			access_token:null
 		  }},
@@ -88,17 +105,70 @@
 				console.log(model);
             });
 		},
+		requestToken(){
+			
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var url = "https://p7-referencewebapp-jwtauthapi.azurewebsites.net/api/Identity/request-token";
+			var body2 = JSON.stringify(
+            {
+                username: 'dog',
+                password: 'I am dog'
+            });
+			fetch(url,
+            {
+				headers: { 'Content-Type': 'application/json' },
+				method: 'POST',
+				body:body2
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res);
+				self.set({ token: res.token });
+			
+            });
+			
+		},
+		checkAuthenticatedToken(){
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var model = this.get();
+			console.log(model);
+		 
+			var url = "https://p7-referencewebapp-jwtauthapi.azurewebsites.net/api/Identity/check-authentication";
+			fetch(url,
+            {
+				credentials: 'include',
+				method: 'GET',
+				headers: {
+					'Authorization': 'Bearer '+model.token, 
+					'Content-Type': 'text/plain'
+				}
+			 
+            })
+            .then(res => res.text())
+            .then(function (res) {
+				console.log(res);
+				self.set({ checkAuthenticatedToken:{ message:res }});
+            })
+			.catch(function(error) {
+				self.set({ checkAuthenticatedToken:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
+		},
 		establishAuthenticatedSession(){
 			
 			let self = this;
 			var model = this.get();
 			console.log(model);
-			var url = "https://pingo7identityserver4.azurewebsites.net/Account/EstablishAuthenticatedSession?accessToken="+model.identity.oidc.access_token;
+			var url = "https://localhost:44310/api/Identity/establish-session?username=herb&password=1234";
 			fetch(url,
             {
-				credentials: 'include',
+                credentials: 'include',
 				headers: { 'Content-Type': 'text/plain' },
-				method: 'GET'
+				method: 'POST'
             })
             .then(function (res) {
 				console.log(res);
@@ -108,7 +178,29 @@
 				console.log('There has been a problem with your fetch operation: ' + error.message);
 			});
 			
+        },
+        signOut(){
+			
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var url = "https://localhost:44310/api/Identity/sign-out";
+			fetch(url,
+            {
+                credentials: 'include',
+				headers: { 'Content-Type': 'text/plain' },
+				method: 'GET'
+            })
+            .then(function (res) {
+				console.log(res);
+				self.set({ signoutResult:{ message:"Success" }});
+            }).catch(function(error) {
+				self.set({ signoutResult:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
+			
 		},
+		
 		checkAuthenticatedSession(){
 			let self = this;
 			var model = this.get();
