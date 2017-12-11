@@ -163,12 +163,12 @@
 			let self = this;
 			var model = this.get();
 			console.log(model);
-			var url = "https://localhost:44310/api/Identity/establish-session?username=herb&password=1234";
+			var url = "https://p7-referencewebapp-cookieauthapi.azurewebsites.net/api/Identity/sign-in?username=herb&password=1234";
 			fetch(url,
             {
                 credentials: 'include',
 				headers: { 'Content-Type': 'text/plain' },
-				method: 'POST'
+				method: 'GET'
             })
             .then(function (res) {
 				console.log(res);
@@ -184,7 +184,7 @@
 			let self = this;
 			var model = this.get();
 			console.log(model);
-			var url = "https://localhost:44310/api/Identity/sign-out";
+			var url = "https://p7-referencewebapp-cookieauthapi.azurewebsites.net/api/Identity/sign-out";
 			fetch(url,
             {
                 credentials: 'include',
@@ -205,7 +205,7 @@
 			let self = this;
 			var model = this.get();
 			console.log(model);
-			var url = "https://pingo7identityserver4.azurewebsites.net/Account/CheckAuthenticatedSession";
+			var url = "https://p7-referencewebapp-cookieauthapi.azurewebsites.net/api/Identity/check-authentication";
 			fetch(url,
             {
 				credentials: 'include',
