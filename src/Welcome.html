@@ -1,5 +1,14 @@
 <h1>Welcome Svelte</h1>
 <button on:click="goHome()">Go Home</button>
+<div>
+
+	<form on:submit='handleSubmit( event )'>
+		<label>SessionData for {{spaRecord.SpaRecord.Key}}</label>
+		<input bind:value='test' type='text'>
+		
+		<button type='submit'>Store</button>
+	  </form>
+</div>
 
 <p>Count: {{count}}</p>
 <button on:click='incrementCount()'>+1</button>
@@ -10,6 +19,7 @@
 <button on:click='fetchIdentity()'>fetchIdentity</button>
 <p>identity.oidc.access_token: {{identity.oidc.access_token}}</p>
 <p>identity.access_code: {{identity.access_code}}</p>
+
 
 
 {{#if identity.oidc.access_token}}
@@ -44,6 +54,7 @@
   export default {
     data () {
 		return {
+		  spaRecord:viewBagRecord,
 		  requestToken:{},
           establishSession:{},
           signoutResult:{},
@@ -75,6 +86,31 @@
  
 	  },
     methods: {
+		handleSubmit ( event ) {
+			// prevent the page from reloading
+			event.preventDefault();
+			var model = this.get();
+
+			var value = this.get( 'test' );
+			var body = JSON.stringify(
+            {
+                key: model.spaRecord.SpaRecord.Key,
+                data: value
+            });
+
+			fetch('/api/extSpa/session/store-data',
+            {
+				credentials: 'include',
+				headers: { 'Content-Type': 'application/json' },
+				method: 'POST',
+				body:body
+            }) 
+			.catch(function(error) {
+				console.log('/api/extSpa/session/store-data failed:' + error.message);
+			});
+
+			console.log( 'value', value );
+	},
       goHome () {
         createRouter.push('/')
       },
